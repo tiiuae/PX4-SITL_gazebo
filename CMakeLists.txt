@@ -400,6 +400,28 @@ if (BUILD_ROS_INTERFACE)
   )
 endif()
 
+if("${GAZEBO_VERSION}" VERSION_LESS "8.0")
+  QT4_WRAP_CPP(headers_MOC include/gazebo_motor_failure_widget.h)
+  add_library(gazebo_motor_failure_widget SHARED ${headers_MOC} src/gazebo_motor_failure_widget.cpp)
+  target_link_libraries(gazebo_motor_failure_widget ${GAZEBO_LIBRARIES} ${QT_LIBRARIES} ${PROTOBUF_LIBRARIES})
+  set(plugins
+    ${plugins}
+    gazebo_motor_failure_widget
+  )
+  message(STATUS "Adding gst_overlay_widget")
+else()
+  if (GSTREAMER_FOUND)
+    QT5_WRAP_CPP(headers_MOC2 include/gazebo_motor_failure_widget.h)
+    add_library(gazebo_motor_failure_widget SHARED ${headers_MOC2} src/gazebo_motor_failure_widget.cpp)
+    target_link_libraries(gazebo_motor_failure_widget ${GAZEBO_LIBRARIES} ${Qt5Core_LIBRARIES} ${Qt5Widgets_LIBRARIES} ${PROTOBUF_LIBRARIES} ${Qt5Test_LIBRARIES})
+    set(plugins
+      ${plugins}
+      gazebo_motor_failure_widget
+    )
+    message(STATUS "adding gst_overlay_widget")
+  endif()
+endif()
+
 if (GSTREAMER_FOUND)
   add_library(gazebo_gst_camera_plugin SHARED src/gazebo_gst_camera_plugin.cpp)
   set(plugins
