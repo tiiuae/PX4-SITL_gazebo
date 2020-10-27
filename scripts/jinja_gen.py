@@ -18,7 +18,7 @@ if __name__ == "__main__":
     parser.add_argument('--serial_baudrate', default=921600, help="Baudrate of Serial device for FMU")
     parser.add_argument('--enable_lockstep', default=1, help="Enable lockstep for simulation")
     parser.add_argument('--hil_mode', default=0, help="Enable HIL mode for HITL simulation")
-    parser.add_argument('--model_name', default="None", help="Model to be used in jinja files")
+    parser.add_argument('--model_name', default="NotSet", help="Model to be used in jinja files")
     parser.add_argument('--output-file', help="sdf output file")
     parser.add_argument('--stdout', action='store_true', default=False, help="dump to stdout instead of file")
     args = parser.parse_args()

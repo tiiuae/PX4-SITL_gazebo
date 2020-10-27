@@ -20,3 +20,5 @@ models/px4flow/px4flow.sdf
 models/r200/r200.sdf
 models/sf10a/sf10a.sdf
 models/standard_vtol/standard_vtol.sdf
+models/temp*
+worlds/temp*
