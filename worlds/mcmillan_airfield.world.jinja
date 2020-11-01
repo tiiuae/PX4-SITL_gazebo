@@ -5,17 +5,24 @@
       <ambient>0.95 0.95 0.95 1</ambient>
       <background>0.3 0.3 0.3 1</background>
       <shadows>true</shadows>
+      <sky>
+        <clouds>
+          <speed>12</speed>
+        </clouds>
+      </sky>
     </scene>
     <include>
       <uri>model://sun_2</uri>
     </include>
-    <!-- A ground plane -->
     <include>
-      <uri>model://ground_plane</uri>
+      <uri>model://mcmillan_airfield</uri>
     </include>
-    <include>
-      <uri>model://asphalt_plane</uri>
-    </include>
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>35.7222542</latitude_deg>
+      <longitude_deg>-120.7665102</longitude_deg>
+      <elevation>280</elevation>
+    </spherical_coordinates>
     <physics name='default_physics' default='0' type='ode'>
       <gravity>0 0 -9.8066</gravity>
       <ode>
