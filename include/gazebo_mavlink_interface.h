@@ -113,6 +113,7 @@ static const std::string kDefaultAirspeedTopic = "/airspeed";
 static const std::string kDefaultBarometerTopic = "/baro";
 static const std::string kDefaultWindTopic = "/world_wind";
 static const std::string kDefaultGroundtruthTopic = "/groundtruth";
+static const std::string kDefaultBatteryTopic = "/battery_status";
 
 //! OR operation for the enumeration and unsigned types that returns the bitmask
 template<typename A, typename B>
@@ -183,6 +184,7 @@ private:
   void AirspeedCallback(AirspeedPtr& airspeed_msg);
   void BarometerCallback(BarometerPtr& baro_msg);
   void WindVelocityCallback(WindPtr& msg);
+  void BatteryStatusCallback(WindPtr& msg);
   void SendSensorMessages();
   void SendGroundTruth();
   void handle_actuator_controls();
@@ -232,6 +234,7 @@ private:
   transport::SubscriberPtr airspeed_sub_{nullptr};
   transport::SubscriberPtr baro_sub_{nullptr};
   transport::SubscriberPtr wind_sub_{nullptr};
+  transport::SubscriberPtr battery_sub_{nullptr};
 
   Sensor_M sensor_map_{}; // Map of sensor SubscriberPtr, IDs and orientations
 
@@ -244,6 +247,7 @@ private:
   std::string airspeed_sub_topic_{kDefaultAirspeedTopic};
   std::string baro_sub_topic_{kDefaultBarometerTopic};
   std::string wind_sub_topic_{kDefaultWindTopic};
+  std::string battery_sub_topic_{kDefaultBatteryTopic};
 
   std::mutex last_imu_message_mutex_ {};
   std::condition_variable last_imu_message_cond_ {};
