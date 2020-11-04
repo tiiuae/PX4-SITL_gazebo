@@ -77,7 +77,7 @@
 static const std::regex kDefaultLidarModelJointNaming(".*(lidar|sf10a)(.*_joint)");
 static const std::regex kDefaultSonarModelJointNaming(".*(sonar|mb1240-xl-ez4)(.*_joint)");
 static const std::regex kDefaultGPSModelJointNaming(".*(gps|ublox-neo-7M)(.*_joint)");
-static const std::regex kDefaultAirspeedModelJointNaming(".*(airspeed)(.*_joint)")
+static const std::regex kDefaultAirspeedModelJointNaming(".*(airspeed)(.*_joint)");
 
 namespace gazebo {
 

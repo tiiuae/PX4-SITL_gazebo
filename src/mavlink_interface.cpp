@@ -189,53 +189,55 @@ void MavlinkInterface::Load()
       fds_[CONNECTION_FD].events = POLLIN | POLLOUT; // read/write
     }
   }
+  hil_data_.resize(1);
 }
 
-void MavlinkInterface::SendSensorMessages(int time_usec) {
+void MavlinkInterface::SendSensorMessages(const int &time_usec, int id) {
 
+  HILData* data = &hil_data_[id];
   mavlink_hil_sensor_t sensor_msg;
-
+  sensor_msg.id = id;
   sensor_msg.time_usec = time_usec;
 
-  if (imu_updated_) {
-    sensor_msg.xacc = accel_b_[0];
-    sensor_msg.yacc = accel_b_[1];
-    sensor_msg.zacc = accel_b_[2];
-    sensor_msg.xgyro = gyro_b_[0];
-    sensor_msg.ygyro = gyro_b_[1];
-    sensor_msg.zgyro = gyro_b_[2];
+  if (data->imu_updated) {
+    sensor_msg.xacc = data->accel_b[0];
+    sensor_msg.yacc = data->accel_b[1];
+    sensor_msg.zacc = data->accel_b[2];
+    sensor_msg.xgyro = data->gyro_b[0];
+    sensor_msg.ygyro = data->gyro_b[1];
+    sensor_msg.zgyro = data->gyro_b[2];
 
     sensor_msg.fields_updated = (uint16_t)SensorSource::ACCEL | (uint16_t)SensorSource::GYRO;
 
-    imu_updated_ = false;
+    data->imu_updated = false;
   }
 
   // send only mag data
-  if (mag_updated_) {
-    sensor_msg.xmag = mag_b_[0];
-    sensor_msg.ymag = mag_b_[1];
-    sensor_msg.zmag = mag_b_[2];
+  if (data->mag_updated) {
+    sensor_msg.xmag = data->mag_b[0];
+    sensor_msg.ymag = data->mag_b[1];
+    sensor_msg.zmag = data->mag_b[2];
     sensor_msg.fields_updated = sensor_msg.fields_updated | (uint16_t)SensorSource::MAG;
 
-    mag_updated_ = false;
+    data->mag_updated = false;
   }
 
   // send only baro data
-  if (baro_updated_) {
-    sensor_msg.temperature = temperature_;
-    sensor_msg.abs_pressure = abs_pressure_;
-    sensor_msg.pressure_alt = pressure_alt_;
+  if (data->baro_updated) {
+    sensor_msg.temperature = data->temperature;
+    sensor_msg.abs_pressure = data->abs_pressure;
+    sensor_msg.pressure_alt = data->pressure_alt;
     sensor_msg.fields_updated = sensor_msg.fields_updated | (uint16_t)SensorSource::BARO;
 
-    baro_updated_ = false;
+    data->baro_updated = false;
   }
 
   // send only diff pressure data
-  if (diff_press_updated_) {
-    sensor_msg.diff_pressure = diff_pressure_;
+  if (data->diff_press_updated) {
+    sensor_msg.diff_pressure = data->diff_pressure;
     sensor_msg.fields_updated = sensor_msg.fields_updated | (uint16_t)SensorSource::DIFF_PRESS;
 
-    diff_press_updated_ = false;
+    data->diff_press_updated = false;
   }
 
   if (!hil_mode_ || (hil_mode_ && !hil_state_level_)) {
@@ -271,31 +273,30 @@ void MavlinkInterface::SendGpsMessages(const SensorData::Gps &data) {
   }
 }
 
-void MavlinkInterface::UpdateBarometer(const SensorData::Barometer &data) {
-  temperature_ = data.temperature;
-  abs_pressure_ = data.abs_pressure;
-  pressure_alt_ = data.pressure_alt;
+void MavlinkInterface::UpdateBarometer(const SensorData::Barometer &data, const int id) {
+  hil_data_[id].temperature = data.temperature;
+  hil_data_[id].abs_pressure = data.abs_pressure;
+  hil_data_[id].pressure_alt = data.pressure_alt;
 
-  baro_updated_ = true;
+  hil_data_[id].baro_updated = true;
 }
 
-void MavlinkInterface::UpdateAirspeed(const SensorData::Airspeed &data) {
-  diff_pressure_ = data.diff_pressure;
-
-  diff_press_updated_ = true;
+void MavlinkInterface::UpdateAirspeed(const SensorData::Airspeed &data, const int id) {
+  hil_data_[id].diff_pressure = data.diff_pressure;
+  hil_data_[id].diff_press_updated = true;
 }
 
-void MavlinkInterface::UpdateIMU(const SensorData::Imu &data) {
-  accel_b_ = data.accel_b;
-  gyro_b_ = data.gyro_b;
+void MavlinkInterface::UpdateIMU(const SensorData::Imu &data, const int id) {
+  hil_data_[id].accel_b = data.accel_b;
+  hil_data_[id].gyro_b = data.gyro_b;
 
-  imu_updated_ = true;
+  hil_data_[id].imu_updated = true;
 }
 
-void MavlinkInterface::UpdateMag(const SensorData::Magnetometer &data) {
-  mag_b_ = data.mag_b;
+void MavlinkInterface::UpdateMag(const SensorData::Magnetometer &data, const int id) {
+  hil_data_[id].mag_b = data.mag_b;
 
-  mag_updated_ = true;
+  hil_data_[id].mag_updated = true;
 }
 
 void MavlinkInterface::pollForMAVLinkMessages()

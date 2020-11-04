@@ -1007,7 +1007,7 @@ void GazeboMavlinkInterface::MagnetometerCallback(MagnetometerPtr& mag_msg) {
 void GazeboMavlinkInterface::AirspeedCallback(AirspeedPtr& airspeed_msg, const int& id) {
   SensorData::Airspeed airspeed_data;
   airspeed_data.diff_pressure = airspeed_msg->diff_pressure();
-  mavlink_interface_->UpdateAirspeed(airspeed_data);
+  mavlink_interface_->UpdateAirspeed(airspeed_data, id);
 }
 
 void GazeboMavlinkInterface::BarometerCallback(BarometerPtr& baro_msg) {
