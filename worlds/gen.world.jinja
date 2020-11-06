@@ -1,0 +1,149 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+  <world name="{{ world_name }}">
+    <scene>
+      <ambient>{{ ambient_light }} {{ ambient_light }} {{ ambient_light }} 1</ambient>
+      <background>{{ background_light }} {{ background_light }} {{ background_light }} 1</background>
+      <shadows>{{ shadows }}</shadows>
+    {% if cloud_speed != "NoClouds" %}
+      <sky>
+        <clouds>
+          <speed>{{ cloud_speed }}</speed>
+        </clouds>
+      </sky>
+    {% endif %}
+    </scene>
+  {% if sun_model != 'NoSun' %}
+    <include>
+      <uri>model://{{ sun_model }}</uri>
+    </include>
+  {% endif %}
+  {% if ((world_name == 'empty') or (world_name == 'irlock') or (world_name == 'windy') or (world_name == 'typhoon') or (world_name == 'warehouse')) %}
+    <include>
+      <uri>model://ground_plane</uri>
+    </include>
+    <include>
+      <uri>model://asphalt_plane</uri>
+    </include>
+  {% endif %}
+  {% if world_name == 'mcmillan' %}
+    <include>
+      <uri>model://mcmillan_airfield</uri>
+    </include>
+    {% set spherical_coords='1' if spherical_coords=='NotSet' else spherical_coords %}
+    {% set latitude='35.7222542' %}
+    {% set longitude='-120.7665102' %}
+    {% set altitude='280' %}
+  {% endif %}
+  {% if world_name == 'ksql' %}
+    <include>
+      <uri>model://ksql_airport</uri>
+    </include>
+    {% set spherical_coords='1' if spherical_coords=='NotSet' else spherical_coords %}
+    {% set latitude='37.523640' %}
+    {% set longitude='-122.255122' %}
+    {% set altitude='1.7' %}
+  {% endif %}
+  {% if world_name == 'irlock' %}
+    <include>
+      <uri>model://irlock_beacon</uri>
+    </include>
+  {% endif %}
+  {% if world_name == 'boat' %}
+    <include>
+      <uri>model://water_level</uri>
+    </include>
+  {% endif %}
+  {% if world_name == 'baylands' %}
+    <include>
+      <uri>model://baylands</uri>
+    </include>
+    {% set spherical_coords='1' if spherical_coords=='NotSet' else spherical_coords %}
+    {% set latitude='37.413534' %}
+    {% set longitude='-121.996561' %}
+    {% set altitude='1.3' %}
+  {% endif %}
+  {% if world_name == 'yosemite' %}
+    </include>
+      <uri>model://yosemite</uri>
+    </include>
+    {% set spherical_coords='1' if spherical_coords=='NotSet' else spherical_coords %}
+    {% set latitude='37.7332531' %}
+    {% set longitude='-119.5616378' %}
+    {% set altitude='2800.4' %}
+  {% endif %}
+  {% if world_name == 'warehouse' %}
+    <include>
+      <uri>model://warehouse</uri>
+    </include>
+  {% endif %}
+  {% if world_name == 'raceway' %}
+    <include>
+      <uri>model://sonoma_raceway</uri>
+      <pose>-295 150 -7 0 0 0</pose>
+    </include>
+    {% set spherical_coords='1' if spherical_coords=='NotSet' else spherical_coords %}
+    {% set latitude='38.161479' %}
+    {% set longitude='-122.454630' %}
+    {% set altitude='488.0' %}
+  {% endif %}
+  {% set wind_speed = '4.0' if ((world_name == 'windy') and (wind_speed == 'NotSet') else wind_speed %}
+  {% set video_widget = '1' if ((world_name == 'typhoon') and (video_widget == 'NotSet') else video_widget %}
+  {% if wind_speed != 'NotSet' %}
+    <plugin name='wind_plugin' filename='libgazebo_wind_plugin.so'>
+      <frameId>base_link</frameId>
+      <robotNamespace/>
+      <xyzOffset>1 0 0</xyzOffset>
+      <windDirectionMean>0 1 0</windDirectionMean>
+      <windVelocityMean>{{ wind_speed }}</windVelocityMean>
+      <windGustDirection>0 0 0</windGustDirection>
+      <windGustDuration>0</windGustDuration>
+      <windGustStart>0</windGustStart>
+      <windGustVelocityMean>0</windGustVelocityMean>
+      <windPubTopic>world_wind</windPubTopic>
+    </plugin>
+  {% endif %}
+  {% if video_widget == '1' %}
+    <gui>
+      <plugin name="video_widget" filename="libgazebo_video_stream_widget.so"/>
+    </gui>
+  {% endif %}
+  {% if spherical_coords == '1' %}
+    <spherical_coordinates>
+      <surface_model>EARTH_WGS84</surface_model>
+      <latitude_deg>{{ latitude }}</latitude_deg>
+      <longitude_deg>{{ longitude }}</longitude_deg>
+      <elevation>{{ altitude }}</elevation>
+    </spherical_coordinates>
+  {% endif %}
+    <physics name='default_physics' default='0' type='ode'>
+      <gravity>0 0 -9.8066</gravity>
+      <ode>
+        <solver>
+          <type>quick</type>
+          <iters>10</iters>
+          <sor>1.3</sor>
+          <use_dynamic_moi_rescaling>0</use_dynamic_moi_rescaling>
+          <thread_position_correction>1</thread_position_correction>
+          <island_threads>{{ ode_threads }}</island_threads>
+        </solver>
+        <constraints>
+          <cfm>0</cfm>
+          <erp>0.2</erp>
+          <contact_max_correcting_vel>100</contact_max_correcting_vel>
+          <contact_surface_layer>0.001</contact_surface_layer>
+        </constraints>
+      </ode>
+      <max_step_size>0.004</max_step_size>
+      <real_time_factor>{{ realtime_factor }}</real_time_factor>
+      <real_time_update_rate>{{ update_rate }}</real_time_update_rate>
+      <magnetic_field>6.0e-6 2.3e-5 -4.2e-5</magnetic_field>
+    </physics>
+  {% if model_name != 'NotSet' %}
+    <include>
+      <uri>model://{{ model_name }}</uri>
+      <pose>0 0 0.25 0 0 0</pose>
+    </include>
+  {% endif %}
+  </world>
+</sdf>
