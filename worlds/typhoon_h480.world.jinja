@@ -1,6 +1,6 @@
 <?xml version="1.0" ?>
 <sdf version="1.5">
-  <world name="default">
+  <world name="typhoon">
     <gui>
       <plugin name="video_widget" filename="libgazebo_video_stream_widget.so"/>
     </gui>
@@ -24,9 +24,11 @@
       <ode>
         <solver>
           <type>quick</type>
-          <iters>50</iters>
-          <sor>1.0</sor>
+          <iters>10</iters>
+          <sor>1.3</sor>
           <use_dynamic_moi_rescaling>0</use_dynamic_moi_rescaling>
+          <thread_position_correction>1</thread_position_correction>
+          <island_threads>{{ ode_threads }}</island_threads>
         </solver>
         <constraints>
           <cfm>0</cfm>
@@ -40,9 +42,11 @@
       <real_time_update_rate>250</real_time_update_rate>
       <magnetic_field>6.0e-6 2.3e-5 -4.2e-5</magnetic_field>
     </physics>
+  {% if model_name != "NotSet" %}
     <include>
       <uri>model://{{ model_name }}</uri>
-      <pose>0 0 0.75 0 0 0</pose>
+      <pose>0 0 0.25 0 0 0</pose>
     </include>
+  {% endif %}
   </world>
 </sdf>

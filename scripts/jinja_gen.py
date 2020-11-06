@@ -21,6 +21,7 @@ if __name__ == "__main__":
     parser.add_argument('--model_name', default="NotSet", help="Model to be used in jinja files")
     parser.add_argument('--output-file', help="sdf output file")
     parser.add_argument('--stdout', action='store_true', default=False, help="dump to stdout instead of file")
+    parser.add_argument('--ode_threads', default=1, help="Number of island threads to use for ODE.")
     args = parser.parse_args()
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(args.env_dir))
     template = env.get_template(os.path.relpath(args.filename, args.env_dir))
@@ -41,6 +42,7 @@ if __name__ == "__main__":
          'serial_baudrate': args.serial_baudrate, \
          'enable_lockstep': args.enable_lockstep, \
          'model_name': args.model_name, \
+         'ode_threads': args.ode_threads, \
          'hil_mode': args.hil_mode}
 
     result = template.render(d)
