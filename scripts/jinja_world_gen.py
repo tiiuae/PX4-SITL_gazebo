@@ -14,8 +14,8 @@ import numpy as np
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
-    parser.add_argument('filename', help="file that the sdf file should be generated from")
-    parser.add_argument('env_dir')
+    parser.add_argument('--filename', help="file that the sdf file should be generated from")
+    parser.add_argument('--env_dir')
     parser.add_argument('--sun_model', default="sun_2", help="Select sun model [sun, sun_2, NoSun]")
     parser.add_argument('--cloud_speed', default="NoClouds", help="Turn on clouds with given speed")
     parser.add_argument('--shadows', default=1, help="Shadows on [1] or off [0]")
@@ -32,7 +32,7 @@ if __name__ == "__main__":
     parser.add_argument('--altitude', default=244, help="Altitude for spherical coordinates")
     parser.add_argument('--model_name', default="NotSet", help="Model to be used in jinja files")
     parser.add_argument('--output-file', help="sdf output file")
-    parser.add_argument('--ode_threads', default=1, help="Number of island threads to use for ODE.")
+    parser.add_argument('--ode_threads', default=2, help="Number of island threads to use for ODE.")
     args = parser.parse_args()
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(args.env_dir))
     template = env.get_template(os.path.relpath(args.filename, args.env_dir))
@@ -59,6 +59,7 @@ if __name__ == "__main__":
          'latitude': args.latitude, \
          'altitude': args.altitude, \
          'longitude': args.longitude, \
+         'world_name': args.world_name, \
          'model_name': args.model_name, \
          'ode_threads': args.ode_threads}
 
@@ -68,7 +69,6 @@ if __name__ == "__main__":
     else:
         filename_out = args.filename.replace('.sdf.jinja', '.sdf')
 
-    else:
-        with open(filename_out, 'w') as f_out:
-            print(('{:s} -> {:s}'.format(args.filename, filename_out)))
-            f_out.write(result)
+    with open(filename_out, 'w') as f_out:
+        print(('{:s} -> {:s}'.format(args.filename, filename_out)))
+        f_out.write(result)

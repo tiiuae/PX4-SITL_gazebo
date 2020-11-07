@@ -87,8 +87,8 @@
     {% set longitude='-122.454630' %}
     {% set altitude='488.0' %}
   {% endif %}
-  {% set wind_speed = '4.0' if ((world_name == 'windy') and (wind_speed == 'NotSet') else wind_speed %}
-  {% set video_widget = '1' if ((world_name == 'typhoon') and (video_widget == 'NotSet') else video_widget %}
+  {% set wind_speed = '4.0' if ((world_name == 'windy') and (wind_speed == 'NotSet')) else wind_speed %}
+  {% set video_widget = '1' if ((world_name == 'typhoon') and (video_widget == 'NotSet')) else video_widget %}
   {% if wind_speed != 'NotSet' %}
     <plugin name='wind_plugin' filename='libgazebo_wind_plugin.so'>
       <frameId>base_link</frameId>
