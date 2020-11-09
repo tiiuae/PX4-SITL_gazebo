@@ -1,5 +1,11 @@
 <?xml version="1.0" ?>
-<sdf version="1.5">
+<!--
+Generated with jinja_world_gen.py
+@author: Benjamin Perseghetti
+@email: bperseghetti@rudislabs.com
+-->
+{% set sdf_version = '1.5' if sdf_version == 'NotSet' else sdf_version %}
+<sdf version="{{ sdf_version }}">
   <world name="{{ world_name }}">
     <scene>
       <ambient>{{ ambient_light }} {{ ambient_light }} {{ ambient_light }} 1</ambient>
@@ -45,9 +51,7 @@
     {% set altitude='1.7' %}
   {% endif %}
   {% if world_name == 'irlock' %}
-    <include>
-      <uri>model://irlock_beacon</uri>
-    </include>
+    {% set irlock_beacon_pose='0 0 0 0 0 0' if irlock_beacon_pose=='NotSet' else irlock_beacon_pose %}
   {% endif %}
   {% if world_name == 'boat' %}
     <include>
@@ -116,6 +120,12 @@
       <elevation>{{ altitude }}</elevation>
     </spherical_coordinates>
   {% endif %}
+  {% if irlock_beacon_pose != 'NotSet' %}
+    <include>
+      <uri>model://irlock_beacon</uri>
+      <pose>{{ irlock_beacon_pose  }}</pose>
+    </include>
+  {% endif %}
     <physics name='default_physics' default='0' type='ode'>
       <gravity>0 0 -9.8066</gravity>
       <ode>
@@ -140,9 +150,10 @@
       <magnetic_field>6.0e-6 2.3e-5 -4.2e-5</magnetic_field>
     </physics>
   {% if model_name != 'NotSet' %}
+    {% set model_pose='0 0 .25 0 0 0' if model_pose=='NotSet' else model_pose %}
     <include>
       <uri>model://{{ model_name }}</uri>
-      <pose>0 0 0.25 0 0 0</pose>
+      <pose>{{ model_pose }}</pose>
     </include>
   {% endif %}
   </world>

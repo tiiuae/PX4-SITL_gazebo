@@ -1,7 +1,8 @@
 <?xml version="1.0"?>
 <!-- DO NOT EDIT: Generated from iris.sdf.jinja -->
 {% set model_name = 'iris' if model_name == 'NotSet' else model_name %}
-<sdf version='1.6'>
+{% set sdf_version = '1.6' if sdf_version == 'NotSet' else sdf_version %}
+<sdf version='{{ sdf_version }}'>
   <model name='{{ model_name }}'>
     <link name='base_link'>
       <pose>0 0 0 0 0 0</pose>
