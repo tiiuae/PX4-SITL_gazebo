@@ -9,6 +9,7 @@ import argparse
 import os
 import fnmatch
 import numpy as np
+import json
 
 rel_px4_gazebo_path = ".."
 rel_world_path ="../worlds"
@@ -16,6 +17,7 @@ script_path = os.path.realpath(__file__).replace("jinja_world_gen.py","")
 default_env_path = os.path.relpath(os.path.join(script_path, rel_px4_gazebo_path))
 default_world_path = os.path.relpath(os.path.join(script_path, rel_world_path))
 default_filename = os.path.relpath(os.path.join(default_world_path, "gen.world.jinja"))
+json_path = os.path.relpath(os.path.join(script_path, "gen_params.json"))
 default_sdf_world_dict = {
     "empty": 1.5,
     "mcmillan": 1.5,
@@ -37,6 +39,7 @@ hitl_model_dict = {
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
+    parser.add_argument('--json_gen', default=0, help="Use JSON (gen_params.json) for world params, on [1] or off [0]")
     parser.add_argument('--sdf_version', default="NotSet", help="SDF format version to use for interpreting world file")
     parser.add_argument('--sun_model', default="sun_2", help="Select sun model [sun, sun_2, NoSun]")
     parser.add_argument('--cloud_speed', default="NoClouds", help="Turn on clouds with given speed")
@@ -59,6 +62,32 @@ if __name__ == "__main__":
     parser.add_argument('--ode_threads', default=2, help="Number of island threads to use for ODE.")
     args = parser.parse_args()
 
+    if args.json_gen:
+        with open(json_path) as json_file:
+            json_params = json.load(json_file)["world_params"]
+        
+        args.sdf_version=json_params["sdf_version"]
+        args.sun_model=json_params["sun_model"]
+        args.cloud_speed=json_params["cloud_speed"]
+        args.shadows=json_params["shadows"]
+        args.video_widget=json_params["video_widget"]
+        args.wind_speed=json_params["wind_speed"]
+        args.update_rate=json_params["update_rate"]
+        args.realtime_factor=json_params["realtime_factor"]
+        args.ambient_light=json_params["ambient_light"]
+        args.background_light=json_params["background_light"]
+        args.spherical_coords=json_params["spherical_coords"]
+        args.latitude=json_params["latitude"]
+        args.altitude=json_params["altitude"]
+        args.longitude=json_params["longitude"]
+        args.irlock_beacon_pose=json_params["irlock_beacon_pose"]
+        args.world_name=json_params["world_name"]
+        args.model_pose=json_params["model_pose"]
+        if args.model_name == "NotSet":
+            args.model_name=str(json_params["model_name"])
+        args.output_file=json_params["output_file"]
+        args.ode_threads=json_params["ode_threads"]
+
 
     if args.world_name not in default_sdf_world_dict:
         print("\nERROR!!!")
@@ -72,7 +101,7 @@ if __name__ == "__main__":
         args.sdf_version = default_sdf_world_dict.get(args.world_name)
         print('SDF version is NOT EXPLICITLY SET, world name: "{:s}" is using default SDF version: {:s}'.format(args.world_name, str(args.sdf_version)))
     
-    if (args.model_name != "NotSet" ) and (args.model_name not in hitl_model_dict):
+    if (args.model_name != "NotSet") and (args.model_name not in hitl_model_dict):
         print("\nERROR!!!")
         print('Model name: "{:s}" DOES NOT MATCH any entries for HITL in hitl_model_dict.\nTry HITL capable model name:'.format(args.model_name))
         for hitl_model_option in hitl_model_dict:
@@ -84,7 +113,8 @@ if __name__ == "__main__":
         args.model_pose = hitl_model_dict.get(args.model_name)
         print('Model pose is NOT EXPLICITLY SET, setting to hitl_model_dict default pose: "{:s}"'.format(args.model_pose))
 
-    args.model_name = 'temp_{:s}_hitl'.format(args.model_name)
+    if args.model_name != "NotSet":
+        args.model_name = 'temp_{:s}_hitl'.format(args.model_name)
 
     env = jinja2.Environment(loader=jinja2.FileSystemLoader(default_env_path))
     template = env.get_template(os.path.relpath(default_filename, default_env_path))
