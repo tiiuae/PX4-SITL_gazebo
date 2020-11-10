@@ -21,7 +21,7 @@
     	"ode_threads": 2
 	},
 	"model_params": {
-		"base_model": "NotSet",
+    	"base_model": "NotSet",
     	"sdf_version": "NotSet",
     	"mavlink_tcp_port": 4560,
     	"mavlink_udp_port": 14560,
