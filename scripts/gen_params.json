@@ -1,5 +1,5 @@
 {	"world_params": {
-		"sdf_version": "NotSet",
+    	"sdf_version": "NotSet",
     	"sun_model": "sun_2",
     	"cloud_speed": "NoClouds",
     	"shadows": 1,
