@@ -54,7 +54,7 @@ if [ -d ${MODELS_DIR} ]; then
 		! -name '3DR_gps_mag.sdf' ! -name 'px4flow.sdf' \
 		! -name 'pixhawk.sdf' ! -name 'c920.sdf' \
 		! -name 'iris.sdf' ! -name 'cupcar.sdf' \
-		! -name 'sun_2.sdf' ! -name 'irlock_beacon.sdf' \
+		! -name 'irlock_beacon.sdf' ! -name 'warehouse.sdf' \
 		! -name 'delta_wing.sdf' ! -name 'r1_rover.sdf' \
 		! -name 'fpv_cam.sdf' ! -name 'iris_triple_depth_camera.sdf')"
 else

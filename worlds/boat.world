@@ -7,7 +7,7 @@
       <shadows>true</shadows>
     </scene>
     <include>
-      <uri>model://sun_2</uri>
+      <uri>model://sun</uri>
     </include>
     <include>
       <uri>model://water_level</uri>
