@@ -615,5 +615,8 @@
       <accelerometerBiasCorrelationTime>300.0</accelerometerBiasCorrelationTime>
       <accelerometerTurnOnBiasSigma>0.196</accelerometerTurnOnBiasSigma>
     </plugin>
+    <plugin name='gazebo_distance_plugin' filename='libgazebo_ros_model_distance.so'>
+      <namespace>{{ namespace }}</namespace>
+    </plugin>
   </model>
 </sdf>
