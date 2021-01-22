@@ -346,12 +346,14 @@ add_library(gazebo_catapult_plugin SHARED src/gazebo_catapult_plugin.cpp)
 add_library(gazebo_usv_dynamics_plugin SHARED src/gazebo_usv_dynamics_plugin.cpp)
 add_library(gazebo_parachute_plugin SHARED src/gazebo_parachute_plugin.cpp)
 add_library(gazebo_airship_dynamics_plugin SHARED src/gazebo_airship_dynamics_plugin.cpp)
+add_library(gazebo_group_pos_plugin SHARED src/gazebo_group_pos_plugin.cpp)
 
 set(plugins
   gazebo_airspeed_plugin
   gazebo_geotagged_images_plugin
   gazebo_gps_plugin
   gazebo_groundtruth_plugin
+  gazebo_group_pos_plugin
   gazebo_irlock_plugin
   gazebo_lidar_plugin
   gazebo_opticalflow_mockup_plugin
