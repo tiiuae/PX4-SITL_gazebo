@@ -217,6 +217,19 @@ void GpsPlugin::Load(sensors::SensorPtr _parent, sdf::ElementPtr _sdf)
   gravity_W_ = world_->Gravity();
 
   gps_pub_ = node_handle_->Advertise<sensor_msgs::msgs::SITLGps>("~/" + model_name_ + "/link/" + gps_topic_, 10);
+  gps_disabled_sub_ = node_handle_->Subscribe("~/" + model_name_ + "/link/" + gps_topic_ + "/disable", &GpsPlugin::OnGspDisableMsg, this);
+  gps_disabled_ = 0;
+}
+
+void GpsPlugin::OnGspDisableMsg(ConstIntPtr &_msg)
+{
+  gps_disabled_ = _msg->data();
+  if (gps_disabled_ != 0) {
+    gzmsg << "[gazebo_gps_plugin] GPS Disabled.\n";
+  } else {
+    gzmsg << "[gazebo_gps_plugin] GPS Enabled.\n";
+  }
+  
 }
 
 void GpsPlugin::OnWorldUpdate(const common::UpdateInfo& /*_info*/)
@@ -365,7 +378,9 @@ void GpsPlugin::OnSensorUpdate()
       }
     }
     // publish SITLGps msg at the defined update rate
-    gps_pub_->Publish(gps_msg);
+    if (!gps_disabled_) {
+      gps_pub_->Publish(gps_msg);
+    }
   }
 }
 } // namespace gazebo

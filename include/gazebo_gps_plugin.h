@@ -70,6 +70,8 @@ protected:
   virtual void OnSensorUpdate();
   virtual void OnWorldUpdate(const common::UpdateInfo& /*_info*/);
 
+  void OnGspDisableMsg(ConstIntPtr &_msg);
+
 private:
   std::string namespace_;
   std::string gps_id_;
@@ -88,6 +90,9 @@ private:
 
   transport::NodePtr node_handle_;
   transport::PublisherPtr gps_pub_;
+
+  transport::SubscriberPtr gps_disabled_sub_;
+  int gps_disabled_;
 
   std::string gps_topic_;
   double update_rate_;
